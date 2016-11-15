@@ -1804,8 +1804,7 @@ End Sub
 
 Function GetNewAppNotification() as string
 
-    'url = "https://raw.githubusercontent.com/MediaBrowser/Emby.Roku/master/content/newappmesssage.txt"
-    url = "https://raw.githubusercontent.com/softworkz/Emby.Roku/master/content/newappmesssage.txt"
+    url = "https://raw.githubusercontent.com/MediaBrowser/Emby.Roku/master/content/newappmesssage.txt"
     
     ' Prepare Request
     request = HttpRequest(url)
@@ -1846,7 +1845,7 @@ Sub CheckDisplayBetaHint()
     
     If diff < 7 * 24 * 60 * 60 Then
         ' Message has already been displayed during the last 7 days
-        'return
+        return
     End If
     
     message = GetNewAppNotification()

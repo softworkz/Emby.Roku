@@ -1802,8 +1802,32 @@ Sub vcDestroyGlitchyScreens()
     next
 End Sub
 
+Function GetNewAppNotification() as string
+
+    'url = "https://raw.githubusercontent.com/MediaBrowser/Emby.Roku/master/content/newappmesssage.txt"
+    url = "https://raw.githubusercontent.com/softworkz/Emby.Roku/master/content/newappmesssage.txt"
+    
+    ' Prepare Request
+    request = HttpRequest(url)
+    request.ContentType("json")
+    request.AddAuthorization()
+    
+    ' Execute Request
+    response = request.GetToStringWithTimeout(15)
+    if response <> invalid
+    
+        return response
+
+    end if
+
+    return invalid
+    
+End Function
+
+
 Sub CheckDisplayBetaHint()
 
+    
     lastDateString = RegRead("lastBetaHintDisplay")
     
     nowDate = CreateObject("roDateTime")
@@ -1822,6 +1846,12 @@ Sub CheckDisplayBetaHint()
     
     If diff < 7 * 24 * 60 * 60 Then
         ' Message has already been displayed during the last 7 days
+        'return
+    End If
+    
+    message = GetNewAppNotification()
+    
+    If firstOf(message, "") = "" Then
         return
     End If
     
@@ -1835,7 +1865,8 @@ Sub CheckDisplayBetaHint()
     dialog = CreateObject("roMessageDialog")
     dialog.SetMessagePort(port) 
     dialog.SetTitle("Try a Preview of our fresh new app")
-    dialog.AddStaticText("Preview the upcoming much improved Emby Roku app now!  A beautifully redesigned interface that allows you to view your Emby content on your Roku like never before.  Try it now by installing the private preview channel at http://emby.media/roku")
+    'dialog.AddStaticText("Preview the upcoming much improved Emby Roku app now!  A beautifully redesigned interface that allows you to view your Emby content on your Roku like never before.  Try it now by installing the private preview channel at http://emby.media/roku")
+    dialog.AddStaticText(message)
     
     dialog.AddButton(1, "OK")
     dialog.EnableBackButton(false)
